@@ -1,9 +1,15 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 
 
 function Register() {
+
+    const {register, handleSubmit, watch, formState:{ errors }} = useForm();
+
+    const onSubmit = data => console.log(data);
+
     return (
       <div class="container-fluid">
         <div class="row" style={{"height": "100vh"}}>
@@ -16,32 +22,36 @@ function Register() {
                     </div>
     
                     <div>
-                        <h2 class="my-4">Sign Up</h2>
-    
-                        <div class="mt-5 mb-4">
-                            <label class="form-label">Email</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Email"/>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <h2 class="my-4">Sign Up</h2>
+        
+                            <div class="mt-5 mb-4">
+                                <label class="form-label">Email</label>
+                                <div class="form-group">
+                                    <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
+                                    {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
+                                </div>
                             </div>
-                        </div>
-    
-                        <div class="my-4">
-                            <label class="form-label">Password</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Password"/>
+
+                            <div class="my-4">
+                                <label class="form-label">Password</label>
+                                <div class="form-group">
+                                    <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
+                                    {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
+                                </div>
                             </div>
-                        </div>
-    
-                        <div class="mt-5">
-                            <label class="form-label">
-                                <input className="me-2" type="checkbox"/>
-                                I have read and accept the <a href="#" class="text-dark fw-bold">Terms of service</a> and <a href="#" class="text-dark fw-bold">Privacy policy</a>
-                            </label>
-                        </div>
-    
-                        <div class="my-4">
-                            <Link to="/signup" class="w-100 btn btn-dark btn-hover">Create an account</Link>
-                        </div>
+
+                            <div class="mt-5">
+                                <label class="form-label">
+                                    <input className="me-2" type="checkbox" checked required/>
+                                    I have read and accept the <a href="#" class="text-dark fw-bold">Terms of service</a> and <a href="#" class="text-dark fw-bold">Privacy policy</a>
+                                </label>
+                            </div>
+
+                            <div class="my-4">
+                                <button type="submit" class="w-100 btn btn-dark btn-hover">Create an account</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
