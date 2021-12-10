@@ -19,7 +19,6 @@ export default function StudyModuleList() {
         <>
             <Navbar/>
             <div class="container h-100 p-5">
-                
                 <div class="d-flex justify-content-center align-items-center flex-column h-75">
                     <div class="p-4 my-5 text-center">
                         <h1>Select a category </h1>
@@ -27,7 +26,7 @@ export default function StudyModuleList() {
                             Laborum tempore aut accusantium nemo? Iusto ut dolores modi, eius nobis quaerat non dignissimos, 
                             provident, architecto asperiores iure accusantium officia amet dicta!</p>
                     </div>
-                    <div class="row d-flex justify-content-center align-items-center" onclick="redirect()">
+                    <div class="row d-flex justify-content-center align-items-center">
                         {
                             studyModules.map((s, index) => {
                                 return (

@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import {Link} from "react-router-dom";
+
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Overlay from "../Components/Overlay";
@@ -16,6 +18,10 @@ export default function StudyModuleDetail(){
             
             <div class="container h-100 p-5" style={{marginBottom: "35px"}}>
                 
+                <div>
+                    <Link to="studies-modules" className="btn btn=dark"><i className="fa fa-arrow-left me-2"></i> Back</Link>
+                </div>
+
                 <div class="col-sm-12 my-5">
                     <div class="py-4 my-2">
                         <h2>How the body works</h2>
