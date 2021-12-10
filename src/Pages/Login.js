@@ -1,9 +1,15 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 
 
 function Login() {
+
+    const {register, handleSubmit, watch, formState:{ errors }} = useForm();
+
+    const onSubmit = data => console.log(data);
+
     return (
       <div class="container-fluid">
         <div class="row" style={{"height": "100vh"}}>
@@ -16,37 +22,42 @@ function Login() {
                     </div>
     
                     <div>
-                        <div class="my-4">
-                            <h2>Log in</h2>
-                            <p>
-                                Log in with your data that you entered during your registration
-                            </p>
-                        </div>
-                        <div class="mt-5 mb-4">
-                            <label class="form-label">Email</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Email"/>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <div class="my-4">
+                                <h2>Log in</h2>
+                                <p>
+                                    Log in with your data that you entered during your registration
+                                </p>
                             </div>
-                        </div>
-
-                        <div class="my-4">
-                            <label class="form-label">Password</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Password"/>
+                            <div class="mt-5 mb-4">
+                                <label class="form-label">Email</label>
+                                <div class="form-group">
+                                    <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
+                                    {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="mt-5 d-flex justify-content-between">
-                            <label class="form-label">
-                                <input className="me-2" type="checkbox"/>
-                                Keep me logged in
-                            </label>
-                            <Link to="/forgot-password" class="text-purple-hover text-decoration-none">Forgot Password ?</Link>
-                        </div>
-    
-                        <div class="my-4">
-                            <Link to="/studies-modules" class="w-100 btn btn-dark btn-hover">Log in</Link>
-                        </div>
+                            <div class="my-4">
+                                <label class="form-label">Password</label>
+                                <div class="form-group">
+                                    <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
+                                    {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
+                                </div>
+                            </div>
+
+                            <div class="mt-5 d-flex justify-content-between">
+                                <label class="form-label">
+                                    <input className="me-2" type="checkbox"/>
+                                    Keep me logged in
+                                </label>
+                                <Link to="/forgot-password" class="text-purple-hover text-decoration-none">Forgot Password ?</Link>
+                            </div>
+        
+                            <div class="my-4">
+                                {/* <Link to="/studies-modules" class="w-100 btn btn-dark btn-hover">Log in</Link> */}
+                                <button class="w-100 btn btn-dark btn-hover">Log in</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
