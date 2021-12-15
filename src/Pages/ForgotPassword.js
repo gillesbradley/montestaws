@@ -8,10 +8,10 @@ function ForgotPassword() {
       <div class="container-fluid">
         <div class="row" style={{"height": "100vh"}}>
             <div class="col-sm-6 d-flex justify-content-center align-items-center">
-                <div>
+                <div style={{ width:"485px" }}>
                 <div class="mb-5" style={{"position": "absolute", "top": "50px", "left": "35%"}}>
                         <p>
-                            Remember your password ? <Link to="/signin" class="text-decoration-none text-dark fw-bold">Login</Link>
+                            Remember your password ? <Link to="/login" class="text-decoration-none text-dark fw-bold">Login</Link>
                         </p>
                     </div>
     

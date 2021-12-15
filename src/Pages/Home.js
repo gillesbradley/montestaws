@@ -7,7 +7,7 @@ import { StudyModule } from "../Components/StudyModule";
 import { studiesModules } from "../Mocks/data";
 
 
-export default function StudyModuleList() {
+export default function Home() {
 
     const [studyModules, setStudyModules] = useState([]);
 
@@ -40,7 +40,7 @@ export default function StudyModuleList() {
 
             <Footer />
 
-            <Overlay />  
+            {/* <Overlay />   */}
         </>
     );
   }

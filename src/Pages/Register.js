@@ -1,14 +1,38 @@
-import React from "react";
+import React, {useState, useCallback} from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom"
+import app from "../base.js";
 
 
 
-function Register() {
-
+function Register({ history }) {
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const {register, handleSubmit, watch, formState:{ errors }} = useForm();
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = (data) => {
+        handleSignUp(data);
+    };
+
+    const handleSignUp = useCallback(async (data) => {
+        
+        try {
+          await app.auth().createUserWithEmailAndPassword(data.email, data.password );
+          history.push("/studiesModules");
+        } catch (error) {
+            
+        switch(error.code){
+            case "auth/email-already-in-use":
+            case "auth/invalid-email":
+                setEmailError(error.message);
+                break;
+            
+            case "auth/weak-password":
+                setPasswordError(error.message);
+                break;
+            }
+        }
+    }, [history]);
 
     return (
       <div class="container-fluid">
@@ -17,7 +41,7 @@ function Register() {
                 <div>
                     <div class="mb-5" style={{ "position": "absolute", "top": "50px", "left": "35%" }}>
                         <p>
-                            Already have an account ? <Link to="/signin" class="text-decoration-none text-dark fw-bold">Login</Link>
+                            Already have an account ? <Link to="/login" class="text-decoration-none text-dark fw-bold">Login</Link>
                         </p>
                     </div>
     
@@ -30,6 +54,7 @@ function Register() {
                                 <div class="form-group">
                                     <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
                                     {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
+                                    {emailError && <span className="text-danger mt-2 d-block">{emailError}</span>}
                                 </div>
                             </div>
 
@@ -38,6 +63,7 @@ function Register() {
                                 <div class="form-group">
                                     <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
                                     {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
+                                    {passwordError && <span className="text-danger mt-2 d-block">{passwordError}</span>}
                                 </div>
                             </div>
 
@@ -87,4 +113,4 @@ function Register() {
     );
   }
 
-export default Register;
+export default withRouter(Register);

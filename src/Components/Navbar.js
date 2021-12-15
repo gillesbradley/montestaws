@@ -1,5 +1,6 @@
 import React from "react";
 import {Dropdown} from "react-bootstrap"
+import app from "../base";
 
 function Navbar() {
     return (
@@ -17,7 +18,7 @@ function Navbar() {
                         <Dropdown.Item href="#/action-1"><img src="assets/img/profile-icon.png" class="me-2" width="20px" alt=""/> Profile</Dropdown.Item>
                         <Dropdown.Item href="#/action-2"><img src="assets/img/messages-icon.png" class="me-2" width="20px" alt=""/> Messages</Dropdown.Item>
                         <Dropdown.Item href="#/action-3"><img src="assets/img/settings-icon.png" class="me-2" width="20px" alt=""/> Settings</Dropdown.Item>
-                        <Dropdown.Item href="#/action-4"><img src="assets/img/logout-icon.png" class="me-2" width="20px" alt=""/> Log out</Dropdown.Item>
+                        <Dropdown.Item onClick={() => app.auth().signOut()}><img src="assets/img/logout-icon.png" class="me-2" width="20px" alt=""/> Log out</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </ul>

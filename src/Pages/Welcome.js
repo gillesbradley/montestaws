@@ -24,8 +24,8 @@ function Welcome() {
                         back to your profile to edit your responses in the future
                     </p>
                     <div class="mt-5">
-                        <Link to="/signup" class="btn btn-purple text-uppercase me-3 px-4" style={{"border-radius": "12px;"}}>Get started</Link>
-                        <Link to="/signin" class="btn btn-outline-light text-uppercase px-4">Sign In</Link>
+                        <Link to="/register" class="btn btn-purple text-uppercase me-3 px-4" style={{"border-radius": "12px;"}}>Get started</Link>
+                        <Link to="/login" class="btn btn-outline-light text-uppercase px-4">Sign In</Link>
                     </div>
                 </div>
             </div>

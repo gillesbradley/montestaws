@@ -1,14 +1,46 @@
-import React from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
+import { AuthContext } from "../AuthProvider";
+import app from "../base.js";
 
 
 
-function Login() {
+function Login({ history }) {
 
     const {register, handleSubmit, watch, formState:{ errors }} = useForm();
 
-    const onSubmit = data => console.log(data);
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const onSubmit = data => {
+        handleLogin(data);
+    };
+
+    const handleLogin = useCallback(async (data) => {
+        try {
+            await app.auth().signInWithEmailAndPassword(data.email, data.password);
+            history.push("/studiesModules");
+        }catch (error) {
+            switch(error.code){
+                case "auth/invalid-email":
+                case "auth/user-disabled":
+                case "auth/user-not-found":
+                  setEmailError(error.message);
+                  break;
+                
+                case "auth/wrong-password":
+                  setPasswordError(error.message);
+                  break;
+            }
+        }
+    }, [history]);
+
+    const { currentUser } = useContext(AuthContext);
+
+    if (currentUser) {
+        return <Redirect to="/studiesModules" />;
+    }
 
     return (
       <div class="container-fluid">
@@ -17,7 +49,7 @@ function Login() {
                 <div>
                     <div class="mb-5" style={{ "position": "absolute", "top": "50px", "left": "35%" }}>
                         <p>
-                        Not a member yet ? <Link to="/signup" class="text-decoration-none text-dark fw-bold">SignUp</Link>
+                        Not a member yet ? <Link to="/register" class="text-decoration-none text-dark fw-bold">SignUp</Link>
                         </p>
                     </div>
     
@@ -31,17 +63,19 @@ function Login() {
                             </div>
                             <div class="mt-5 mb-4">
                                 <label class="form-label">Email</label>
-                                <div class="form-group">
+                                <div class="form-group" style={{ width:"485px" }}>
                                     <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
                                     {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
+                                    {emailError && <span className="text-danger mt-2 d-block">{emailError}</span>}
                                 </div>
                             </div>
 
                             <div class="my-4">
                                 <label class="form-label">Password</label>
-                                <div class="form-group">
+                                <div class="form-group" style={{ width:"485px" }}>
                                     <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
                                     {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
+                                    {passwordError && <span className="text-danger mt-2 d-block">{passwordError}</span>}
                                 </div>
                             </div>
 
@@ -93,4 +127,4 @@ function Login() {
     );
   }
 
-export default Login;
+export default withRouter(Login);
