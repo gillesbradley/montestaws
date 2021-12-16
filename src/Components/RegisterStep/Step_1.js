@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 
 export const Step_1 = () => {
+
+    const showDaysNumber = (numbers) => {
+        const row = [];
+        for (let i = 1 ; i <= 31; i++) {
+                row.push(<option value=''>{(i<10) ? "0"+i : i}</option>);
+        }
+
+        return row;
+    }
+
+    const showMonths = () => {
+        let months = [
+            {value:"January"}, {value:"February"}, {value:"March"}, {value:"April"}, {value:"May"}, {value:"June"}, {value:"July"}, {value:"August"}, {value:"September"}, {value:"October"}, {value:"November"}, {value:"December"}
+        ];
+
+        return months.map(month => <option value={month.value} >{month.value}</option>);
+    }
+
+    const showYears = () => {
+        const row = [];
+        for (let i = (new Date()).getFullYear() ; i >= 1950; i--) {
+                row.push(<option value=''>{i}</option>);
+        }
+
+        return row;
+    }
+
     return (
         <div>
             <div class="text-center">
@@ -26,31 +53,23 @@ export const Step_1 = () => {
                     <div class="row">
                         <div class="col form-group">
                             <select name="" class="form-select">
-                                {/* <script>
-                                    for (let index = 1; index < 31; index++) {
-                                        index = (index<10) ? "0"+index : index;
-                                        document.write("<option value=''>"+index+"</option>");
-                                    }
-                                </script> */}
+                                {
+                                    showDaysNumber(31)
+                                }
                             </select>
                         </div>
                         <div class="col form-group">
-                            <select name="" class="form-select">
-                                {/* <script>
-                                    months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] 
-                                    months.forEach(m => {
-                                        document.write("<option value=''>"+m+"</option>");
-                                    });
-                                </script> */}
-                            </select>
+                        <select name="" class="form-select">
+                            {
+                                showMonths()
+                            }
+                        </select>
                         </div>
                         <div class="col form-group">
                             <select name="" class="form-select">
-                                {/* <script>
-                                    for (let index = (new Date()).getFullYear() ; index >= 1950; index--) {
-                                        document.write("<option value=''>"+index+"</option>");
-                                    }
-                                </script> */}
+                                {
+                                    showYears()
+                                }
                             </select>
                         </div>
                     </div>
