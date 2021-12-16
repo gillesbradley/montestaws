@@ -18,7 +18,7 @@ function Register({ history }) {
         
         try {
           await app.auth().createUserWithEmailAndPassword(data.email, data.password );
-          history.push("/studiesModules");
+          history.push("/registerStep");
         } catch (error) {
             
         switch(error.code){

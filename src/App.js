@@ -16,6 +16,7 @@ import StudyModuleDetail from './Pages/StudyModuleDetail';
 import PrivateRoute from "./PrivateRoute";
 import Home from "./Pages/Home";
 import { AuthProvider } from "./AuthProvider";
+import RegisterStep from "./Pages/RegisterStep";
 
 
 function App() {
@@ -108,6 +109,7 @@ function App() {
 
             <PrivateRoute exact path="/studiesModules" component={Home} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/registerStep" component={RegisterStep} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/" component={Welcome} />
           </Switch>
