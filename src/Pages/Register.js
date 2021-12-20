@@ -1,8 +1,9 @@
 import React, {useState, useCallback} from "react";
 import { useForm } from "react-hook-form";
 import { Link, withRouter } from "react-router-dom"
-import app from "../base.js";
+import app from "../firebaseConfig";
 
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth'
 
 
 function Register({ history }) {
@@ -17,21 +18,22 @@ function Register({ history }) {
     const handleSignUp = useCallback(async (data) => {
         
         try {
-          await app.auth().createUserWithEmailAndPassword(data.email, data.password );
-          history.push("/registerStep");
+            const auth = getAuth();
+            await createUserWithEmailAndPassword(auth, data.email, data.password );
+            history.push("/registerStep");
+
         } catch (error) {
-            
-        switch(error.code){
-            case "auth/email-already-in-use":
-            case "auth/invalid-email":
-                setEmailError(error.message);
-                break;
-            
-            case "auth/weak-password":
-                setPasswordError(error.message);
-                break;
+            switch(error.code){
+                case "auth/email-already-in-use":
+                case "auth/invalid-email":
+                    setEmailError(error.message);
+                    break;
+                
+                case "auth/weak-password":
+                    setPasswordError(error.message);
+                    break;
+                }
             }
-        }
     }, [history]);
 
     return (

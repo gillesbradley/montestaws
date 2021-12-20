@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
-import app from "../base.js";
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
 
 
 
@@ -19,7 +19,8 @@ function Login({ history }) {
 
     const handleLogin = useCallback(async (data) => {
         try {
-            await app.auth().signInWithEmailAndPassword(data.email, data.password);
+            const auth = getAuth();
+            await signInWithEmailAndPassword(auth, data.email, data.password);
             history.push("/studiesModules");
         }catch (error) {
             switch(error.code){
