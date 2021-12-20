@@ -18,6 +18,9 @@ function Login({ history }) {
     };
 
     const handleLogin = useCallback(async (data) => {
+        setEmailError("");
+        setPasswordError("");
+
         try {
             const auth = getAuth();
             await signInWithEmailAndPassword(auth, data.email, data.password);
@@ -25,13 +28,14 @@ function Login({ history }) {
         }catch (error) {
             switch(error.code){
                 case "auth/invalid-email":
-                case "auth/user-disabled":
                 case "auth/user-not-found":
-                  setEmailError(error.message);
-                  break;
-                
+                    setEmailError("Incorrect email. Please fill in a valid email.");
+                    break;
+                case "auth/user-disabled":
+                    setEmailError("disabled user. This email has been deactivated.");
+                    break;
                 case "auth/wrong-password":
-                  setPasswordError(error.message);
+                  setPasswordError("Incorrect password. Please fill in a valid password.");
                   break;
             }
         }
@@ -65,7 +69,7 @@ function Login({ history }) {
                             <div class="mt-5 mb-4">
                                 <label class="form-label">Email</label>
                                 <div class="form-group" style={{ width:"485px" }}>
-                                    <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
+                                    <input type="text" {...register("email", {required:'Email is a required field'})} class="form-control" placeholder="Email"/>
                                     {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
                                     {emailError && <span className="text-danger mt-2 d-block">{emailError}</span>}
                                 </div>
@@ -74,7 +78,7 @@ function Login({ history }) {
                             <div class="my-4">
                                 <label class="form-label">Password</label>
                                 <div class="form-group" style={{ width:"485px" }}>
-                                    <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
+                                    <input type="password" {...register("password", {required:'Password is a required ', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
                                     {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
                                     {passwordError && <span className="text-danger mt-2 d-block">{passwordError}</span>}
                                 </div>

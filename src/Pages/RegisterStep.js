@@ -5,12 +5,12 @@ import { Step_2 } from "../Components/RegisterStep/Step_2";
 import { Step_3 } from "../Components/RegisterStep/Step_3";
 
 import { useForm } from "react-hook-form";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore"; 
+import { doc, getDoc, setDoc } from "firebase/firestore"; 
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firestoreConfig";
 
 
-function RegisterStep() {
+function RegisterStep({ history }) {
     const {register, handleSubmit, watch, formState:{ errors }} = useForm();
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -38,9 +38,7 @@ function RegisterStep() {
         return row;
     }
 
-    const submitUserInformation = async (e) => {
-        e.preventDefault();
-
+    const submitUserInformation = async () => {
         const auth = getAuth();
         const user = auth.currentUser;
         
@@ -51,19 +49,47 @@ function RegisterStep() {
                 contentCategory: userInfo.contentCategory,
                 firstname: userInfo.firstname,
                 lastname: userInfo.lastname,
+                email: user.email,
                 gender: userInfo.gender,
                 birthdate: userInfo.birth_day+" "+userInfo.birth_month+" "+userInfo.birth_year,
             };
             console.log("avant docRef")
-            const docRef = collection(db, 'users', user.uid);
-            console.log("après docRef")
-            //await setDoc(docRef, userData);
+            const docRef = doc(db, "users", user.uid);
+            setDoc(docRef, userData);
 
-            //return <Redirect to="/studiesModules" />;
+            history.push("/studiesModules");
+            
         } catch (e) {
             console.error("Error adding document: ", e);
         }
     }
+
+    const checkIfUserSave = () => {
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const user = auth.currentUser;
+
+                const docRef = doc(db, "users", user.uid);
+                const userRef = await getDoc(docRef);
+
+                let userInfo = userRef.data();
+                
+                if (typeof userInfo === "undefined") {
+                    
+                }else{
+                    history.push("/studiesModules");
+                }
+            } else {
+                history.push("/");
+            }
+        })
+    };
+
+    useEffect(() => {
+        checkIfUserSave();
+    }, [checkIfUserSave])
 
     return (
         <>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {Dropdown} from "react-bootstrap"
 
-import { db } from "../firestoreConfig";
-import { doc, getDoc, where } from 'firebase/firestore/lite';
+import { doc, getDoc } from 'firebase/firestore';
 
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { Redirect } from "react-router-dom";
-import { get } from "react-hook-form";
+import { db } from "../firestoreConfig";
 
 function Navbar() {
     const [user, setUser] = useState({})
@@ -22,19 +21,34 @@ function Navbar() {
         });
     }
 
+    const getUser = () => {
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const user = auth.currentUser;
+
+                const docRef = doc(db, "users", user.uid);
+                const userInfo = await getDoc(docRef);
+
+                setUser(userInfo.data())
+            } else {
+                <Redirect to={"/"} />
+            }
+        })
+
+        // const user = auth.currentUser;
+
+        // const docRef = doc(db, "users", user.uid);
+        // const userInfo = await getDoc(docRef);
+
+        // setUser(userInfo.data())
+    }
+
+
     useEffect(() => {
+        getUser();
         
-        const getUser = async (uidValue) => {
-            const auth = getAuth();
-            const user = auth.currentUser;
-
-            const docRef = doc(db, "users", user.uid);
-            const userInfo = await getDoc(docRef);
-
-            setUser(userInfo.data())
-        }
-        getUser(uid);
-
     }, [])
 
     return (
@@ -44,14 +58,15 @@ function Navbar() {
                     <img src="assets/img/logo.png" width="200px" alt=""/>
                 </li>
                 <Dropdown>
-                    <div className="d-flex justify-content-center align-items-center">
-                        <Dropdown.Toggle className="d-flex " variant="white" id="dropdown-basic">
-                            <img src="assets/img/avatars/avatar.png" alt=""/>
-                        </Dropdown.Toggle>
-                        <h6>{user.lastname+" "+user.firstname}</h6>
-                    </div>
+                    <Dropdown.Toggle variant="white" id="dropdown-basic">
+                        <img src="assets/img/avatars/avatar.png" alt=""/>
+                    </Dropdown.Toggle>
         
                     <Dropdown.Menu>
+                        <div className="text-center m-2">
+                            <strong className="d-block">{user.firstname}</strong>
+                            <small>{user.email}</small>
+                        </div><hr/>
                         <Dropdown.Item href="#/action-1"><img src="assets/img/profile-icon.png" class="me-2" width="20px" alt=""/> Profile</Dropdown.Item>
                         <Dropdown.Item href="#/action-2"><img src="assets/img/messages-icon.png" class="me-2" width="20px" alt=""/> Messages</Dropdown.Item>
                         <Dropdown.Item href="#/action-3"><img src="assets/img/settings-icon.png" class="me-2" width="20px" alt=""/> Settings</Dropdown.Item>

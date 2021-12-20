@@ -9,7 +9,7 @@ function Welcome() {
             <img src="assets/img/logo-white.png" alt=""/>
         </div>
         <div class="banner">
-            <video autoplay="true" muted loop src="assets/bg-1.mp4" type="video/mp4"/>
+            <video autoplay="true" muted loop src="assets/bg-2.mp4" type="video/mp4"/>
 
             <div class="content">
                 

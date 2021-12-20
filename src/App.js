@@ -1,5 +1,5 @@
 
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,101 +17,28 @@ import PrivateRoute from "./PrivateRoute";
 import Home from "./Pages/Home";
 import { AuthProvider } from "./AuthProvider";
 import RegisterStep from "./Pages/RegisterStep";
-
+import NotFound from "./Pages/NotFound";
 
 function App() {
-
-  const [user, setUser] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [hasAccount, setHasAccount] = useState('');
-
-  const clearInputs = () => {
-    setEmail("");
-    setPassword("");
-  }
-
-  const clearErrors = () => {
-    setEmailError("");
-    setPasswordError("");
-  }
-
-  // const handleLogin = () => {
-  //   clearErrors();
-
-  //   firebaseConfig
-  //     .auth()
-  //     .signInWithEmailAndPassword(email, password)
-  //     .catch(error => {
-        // switch(error.code){
-        //   case "auth/invalid-email":
-        //   case "auth/user-disabled":
-        //   case "auth/user-not-found":
-        //     setEmailError(error.message);
-        //     break;
-          
-        //   case "auth/wrong-password":
-        //     setPasswordError(error.message);
-        //     break;
-        // }
-  //     })
-  // }
-
-  // const handleRegister = () => {
-  //   clearErrors();
-
-  //   firebaseConfig
-  //     .auth()
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .catch(error => {
-  //       switch(error.code){
-  //         case "auth/email-already-in-use":
-  //         case "auth/invalid-email":
-  //           setEmailError(error.message);
-  //           break;
-          
-  //         case "auth/weak-password":
-  //           setPasswordError(error.message);
-  //           break;
-  //       }
-  //     })
-  // }
-
-  // const handleLogout = () => {
-  //   firebaseConfig.auth().signOut();
-  // }
-
-  // const authListener = () => {
-  //   firebaseConfig.auth().onAuthStateChanged((user) => {
-  //     if(user){
-  //       clearInputs();
-  //       setUser(user);
-  //     }else{
-  //       setUser("");
-  //     }
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   authListener();
-  // }, [])
 
   return (
     <AuthProvider>
 
       <Router>
           <Switch>
-            <Route path="/studies-modules-detail" component={StudyModuleDetail} />
 
             <Route path="/forgot-password" component={ForgotPassword} />
 
+            <Route path="/studiesModulesDetail" component={StudyModuleDetail} />
             <PrivateRoute exact path="/studiesModules" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/registerStep" component={RegisterStep} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/" component={Welcome} />
+            
+            
+            <Route path='*' component={NotFound} />
+
           </Switch>
       </Router>
     </AuthProvider>

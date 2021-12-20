@@ -16,7 +16,9 @@ function Register({ history }) {
     };
 
     const handleSignUp = useCallback(async (data) => {
-        
+        setEmailError("");
+        setPasswordError("");
+
         try {
             const auth = getAuth();
             await createUserWithEmailAndPassword(auth, data.email, data.password );
@@ -25,12 +27,14 @@ function Register({ history }) {
         } catch (error) {
             switch(error.code){
                 case "auth/email-already-in-use":
+                    setEmailError("This email is already in use. Please fill in another.");
+                    break;
                 case "auth/invalid-email":
-                    setEmailError(error.message);
+                    setEmailError("Incorrect email. Please fill in a valid email.");
                     break;
                 
                 case "auth/weak-password":
-                    setPasswordError(error.message);
+                    setPasswordError("Weak password. Please strengthen your password.");
                     break;
                 }
             }
@@ -54,7 +58,7 @@ function Register({ history }) {
                             <div class="mt-5 mb-4">
                                 <label class="form-label">Email</label>
                                 <div class="form-group">
-                                    <input type="email" {...register("email", {required:'This field is required'})} class="form-control" placeholder="Email"/>
+                                    <input type="text" {...register("email", {required:'Email is a required field'})} class="form-control" placeholder="Email"/>
                                     {errors.email && <span className="text-danger mt-2 d-block">{errors.email.message}</span>}
                                     {emailError && <span className="text-danger mt-2 d-block">{emailError}</span>}
                                 </div>
@@ -63,7 +67,7 @@ function Register({ history }) {
                             <div class="my-4">
                                 <label class="form-label">Password</label>
                                 <div class="form-group">
-                                    <input type="password" {...register("password", {required:'This field is required', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
+                                    <input type="password" {...register("password", {required:'Password is a required field', minLength:{value: 8, message:'Your password must be at least 8 characters long'}})} class="form-control" placeholder="Password"/>
                                     {errors.password && <span className="text-danger mt-2 d-block">{errors.password.message}</span>}
                                     {passwordError && <span className="text-danger mt-2 d-block">{passwordError}</span>}
                                 </div>
@@ -71,7 +75,7 @@ function Register({ history }) {
 
                             <div class="mt-5">
                                 <label class="form-label">
-                                    <input className="me-2" type="checkbox" checked required/>
+                                    <input className="me-2" type="checkbox" required/>
                                     I have read and accept the <a href="#" class="text-dark fw-bold">Terms of service</a> and <a href="#" class="text-dark fw-bold">Privacy policy</a>
                                 </label>
                             </div>

@@ -1,19 +1,47 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import Overlay from "../Components/Overlay";
 import { StudyModule } from "../Components/StudyModule";
+import { db } from "../firestoreConfig";
 import { studiesModules } from "../Mocks/data";
 
 
-export default function Home() {
+export default function Home({history}) {
+
+    const checkIfUserNotSave = () => {
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const user = auth.currentUser;
+
+                const docRef = doc(db, "users", user.uid);
+                const userRef = await getDoc(docRef);
+
+                let userInfo = userRef.data();
+                
+                if (typeof userInfo == "undefined") {
+                    history.push("/registerStep");
+                }else{
+                }
+            } else {
+                history.push("/");
+            }
+        })
+    };
 
     const [studyModules, setStudyModules] = useState([]);
 
     useEffect(() => {
-        setStudyModules(studiesModules)
-    }, []);
+        setStudyModules(studiesModules);
+        checkIfUserNotSave();
+    }, [checkIfUserNotSave]);
+
+    
 
     return (
         <>

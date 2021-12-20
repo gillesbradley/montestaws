@@ -5,21 +5,34 @@ import {Link} from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Overlay from "../Components/Overlay";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-export default function StudyModuleDetail(){
+export default function StudyModuleDetail({history}){
+    const authListener = () => {
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                //const uid = user.uid;
+            } else {
+                history.push("/");
+            }
+        })
+    };
 
     useEffect(() => {
         video();
-    }, [])
-
+        authListener();
+    }, [authListener, video])
+    
     return (
         <>
             <Navbar/>
             
             <div class="container h-100 p-5" style={{marginBottom: "35px"}}>
                 
-                <div>
-                    <Link to="studies-modules" className="btn btn=dark"><i className="fa fa-arrow-left me-2"></i> Back</Link>
+                <div className="mt-5">
+                    <Link to="studiesModules" className="btn btn-outline-dark"><i className="fa fa-arrow-left me-2"></i> Go Back</Link>
                 </div>
 
                 <div class="col-sm-12 my-5">
@@ -38,14 +51,20 @@ export default function StudyModuleDetail(){
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-around">
-                        <span class="horizontal-bar"></span>
-                        <span class="horizontal-bar"></span>
-                        <span class="horizontal-bar"></span>
-                        <span class="horizontal-bar"></span>
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div class="row mt-5">
+                            <p class="mx-2 horizontal-bar active"></p>
+                            <p class="mx-2 horizontal-bar"></p>
+                            <p class="mx-2 horizontal-bar"></p>
+                            <p class="mx-2 horizontal-bar"></p>
+                        </div>
+                        <div>
+                            <a className="btn btn-light me-1" data-toggle="tooltip" data-placement="top" title="Previous step"><i className="fa fa-angle-left"></i></a>
+                            <a className="btn btn-light ms-1" data-toggle="tooltip" data-placement="top" title="Next step"><i className="fa fa-angle-right"></i></a>
+                        </div>
                     </div>
 
-                    <div class="mt-5">
+                    <div class="mt-3">
                         <h3>Step 1 : Parts of the human body</h3>
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
@@ -89,7 +108,7 @@ export default function StudyModuleDetail(){
         
             <Footer/>
 
-            <Overlay/>  
+            {/* <Overlay/>   */}
         </>
     );
 }

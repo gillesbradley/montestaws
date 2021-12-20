@@ -40,11 +40,11 @@ export const Step_1 = ({currentStep, setCurrentStep, userInfo, setUserInfo}) => 
                     <label class="form-label">Your name</label>
                     <div class="row">
                         <div class="col form-group">
-                            <input value={lastname} onChange={(e) => {setLastname(e.target.value)}} type="text" {...register("lastname", {required:'This field is required'})} class="form-control" placeholder="Lastname"/>
+                            <input value={lastname} onChange={(e) => {setLastname(e.target.value)}} type="text" {...register("lastname", {required:'Lastname is a required field'})} class="form-control" placeholder="Lastname"/>
                             {errors.lastname && <span className="text-danger mt-2 d-block">{errors.lastname.message}</span>}
                         </div>
                         <div class="col form-group">
-                            <input value={firstname} onChange={(e) => {setFirstname(e.target.value)}} type="text" {...register("firstname", {required:'This field is required'})} class="form-control" placeholder="Firstname"/>
+                            <input value={firstname} onChange={(e) => {setFirstname(e.target.value)}} type="text" {...register("firstname", {required:'Firstname is a required field'})} class="form-control" placeholder="Firstname"/>
                             {errors.firstname && <span className="text-danger mt-2 d-block">{errors.firstname.message}</span>}
                         </div>
                     </div>
@@ -53,7 +53,7 @@ export const Step_1 = ({currentStep, setCurrentStep, userInfo, setUserInfo}) => 
                     <label class="form-label">Your birth date</label>
                     <div class="row">
                         <div class="col form-group">
-                            <input type="number" value={userInfo.birth_day} placeholder="DD" min="1" max="31" {...register("day", {required:'This field is required', valueAsNumber: true})} class="form-control"/>
+                            <input type="number" value={userInfo.birth_day} placeholder="DD" min="1" max="31" {...register("day", {required:'The day of your birth day is required', valueAsNumber: true})} class="form-control"/>
                             {errors.day && <span className="text-danger mt-2 d-block">{errors.day.message}</span>}
                         </div>
                         <div class="col form-group">
@@ -66,7 +66,7 @@ export const Step_1 = ({currentStep, setCurrentStep, userInfo, setUserInfo}) => 
                         {errors.month && <span className="text-danger mt-2 d-block">{errors.month.message}</span>}
                         </div>
                         <div class="col form-group">
-                            <input type="number"  value={userInfo.birth_year} placeholder="YYYY" min="1950" max={(new Date()).getFullYear()} {...register("year", {required:'This field is required', valueAsNumber: true})} class="form-control"/>
+                            <input type="number"  value={userInfo.birth_year} placeholder="YYYY" min="1950" max={(new Date()).getFullYear()} {...register("year", {required:'The year of your birth day is required', valueAsNumber: true})} class="form-control"/>
                             {errors.year && <span className="text-danger mt-2 d-block">{errors.year.message}</span>}
                         </div>
                     </div>
