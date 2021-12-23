@@ -40,7 +40,7 @@ export default function Home({history}) {
     };
 
     const getAllStudyModules = () => {
-        getToAxios("http://localhost:59880/api/studymodule/").then(json => {
+        getToAxios("http://localhost:59880/api/studymodule/category/"+userAuthenticate.contentCategory).then(json => {
             //console.log(json);
             setStudyModules(json);
         })
@@ -75,7 +75,7 @@ export default function Home({history}) {
                     </div>
                     <div class="row d-flex justify-content-center align-items-center">
                         {
-                            studyModules.length==0 ? <h2>loading ....</h2> : studyModules.map((s, index) => (userAuthenticate.contentCategory == s.categoryStudyModule.categoryName ) ? <StudyModule key={index} data={s} /> : <NoData/>)
+                            studyModules.length==0 ? <NoData/> : studyModules.map((s, index) => <StudyModule key={index} data={s} />)
                         }
                     </div>
                 </div>
