@@ -1,13 +1,75 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import Overlay from "../Components/Overlay";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import getToAxios from "../Services/getToAxios";
 
 export default function StudyModuleDetail({history}){
+    const {idStudyModule} = useParams();
+    const [studyModule, setStudyModule] = useState({});
+    const [stepsModule, setStepsModule] = useState([])
+    const [stepCurrent, setStepCurrent] = useState(0)
+    
+    const  body = () => {
+        let rows = [];
+        for (let index = 0; index < stepsModule.length; index++) {
+            rows.push(<p class={stepCurrent == index ? "mx-2 horizontal-bar active" : "mx-2 horizontal-bar"}></p>)
+        }
+
+        return rows
+    }
+
+    const showStepsStudyModule = () => {
+        if (stepsModule.length == 0) {
+            return <h2>loading ....</h2>;
+        }else{
+            return(
+                <>
+                    <div className="w-100">
+                        {/* <video  className="w-100" style={{ borderRadius:"12px" }} controls="controls">
+                            <source src={stepsModule[stepCurrent].stepMedia} type="video/mp4"/>
+                        </video> */}
+
+                        <iframe className="w-100" style={{ borderRadius:"12px" }} src={stepsModule[stepCurrent].stepMedia} height="500" src={stepsModule[stepCurrent].stepMedia} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+        
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div class="row mt-5">
+                            {
+                                body()
+                            }
+                        </div>
+                        <div>
+                            <a className="btn btn-light me-1" onClick={() => setStepCurrent(stepCurrent - 1)} title="previous step"><i className="fa fa-angle-left"></i></a>
+                            <a className="btn btn-light ms-1" onClick={() => setStepCurrent(stepCurrent + 1)} title="next step"><i className="fa fa-angle-right"></i></a>
+                        </div>
+                    </div>
+        
+                    <div class="mt-3">
+                        <h3>
+                            {
+                                stepsModule[stepCurrent].stepTitle
+                            }
+                        </h3>
+                        <p>
+                            {
+                                stepsModule[stepCurrent].stepContent
+                            }
+                        </p>
+        
+                        <div class="my-4">
+                            <a href="#" class="btn btn-dark px-3">What did I retain ? <img src="assets/img/reflexion-icon.png" alt=""/></a>
+                        </div>
+                    </div>
+                </>
+            )
+        }
+    }
+
     const authListener = () => {
         const auth = getAuth();
 
@@ -20,15 +82,26 @@ export default function StudyModuleDetail({history}){
         })
     };
 
-    useEffect(() => {
-        video();
+    useEffect(() => { 
+        const getStudyModule = async () => {
+            await getToAxios("http://localhost:59880/api/studymodule/"+idStudyModule).then(json => {
+                setStudyModule(json);
+                setStepsModule(json.stepsStudyModule);
+            })
+            .catch(error=>{
+    
+                console.log("erreur suivante : "+error);
+            })
+        }
+        getStudyModule();
+
         authListener();
-    }, [authListener, video])
+    }, [authListener])
     
     return (
         <>
             <Navbar/>
-            
+                
             <div class="container h-100 p-5" style={{marginBottom: "35px"}}>
                 
                 <div className="mt-5">
@@ -37,112 +110,16 @@ export default function StudyModuleDetail({history}){
 
                 <div class="col-sm-12 my-5">
                     <div class="py-4 my-2">
-                        <h2>How the body works</h2>
+                        <h2>{studyModule.moduleName}</h2>
                     </div>
-                    <div id="video-container">
-                        <video id="video">
-                            <source src="assets/bg-1.mp4"/>
-                        </video>
-                        {/* <img src="../assets/img/play-icon.png" alt=""> */}
-                        <div class="controls">
-                            <button id="play"><i class="fa fa-play-circle"></i></button>
-                            <span id="videoTime"></span>/<span id="videoDuration"></span>
-                            <input type="range" value="0" id="range"/>
-                        </div>
-                    </div>
-
-                    <div className="d-flex justify-content-between align-items-center">
-                        <div class="row mt-5">
-                            <p class="mx-2 horizontal-bar active"></p>
-                            <p class="mx-2 horizontal-bar"></p>
-                            <p class="mx-2 horizontal-bar"></p>
-                            <p class="mx-2 horizontal-bar"></p>
-                        </div>
-                        <div>
-                            <a className="btn btn-light me-1" data-toggle="tooltip" data-placement="top" title="Previous step"><i className="fa fa-angle-left"></i></a>
-                            <a className="btn btn-light ms-1" data-toggle="tooltip" data-placement="top" title="Next step"><i className="fa fa-angle-right"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <h3>Step 1 : Parts of the human body</h3>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Consectetur justo mollis lacus euismod praesent venenatis. 
-                            Adipiscing aenean eget eget diam feugiat. Viverra mus non semper et porttitor purus nunc tempus. 
-                            Iaculis sit eleifend cum accumsan lobortis. Imperdiet sed platea iaculis scelerisque. 
-                            Tortor interdum magna congue amet, pretium sed. Quis ultrices at leo, egestas sapien sapien eu. 
-                            Feugiat sit orci rutrum purus massa in facilisi platea ac. Egestas elit pellentesque velit nec erat. 
-                            Felis aliquet diam porttitor proin arcu in scelerisque eget senectus. 
-                            Aliquam lobortis quam velit nisl, ullamcorper. Lorem tincidunt quisque amet sodales.
-                        </p>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Consectetur justo mollis lacus euismod praesent venenatis. 
-                            Adipiscing aenean eget eget diam feugiat. Viverra mus non semper et porttitor purus nunc tempus. 
-                            Iaculis sit eleifend cum accumsan lobortis. Imperdiet sed platea iaculis scelerisque. 
-                            Tortor interdum magna congue amet, pretium sed. Quis ultrices at leo, egestas sapien sapien eu. 
-                            Feugiat sit orci rutrum purus massa in facilisi platea ac. Egestas elit pellentesque velit nec erat. 
-                            Felis aliquet diam porttitor proin arcu in scelerisque eget senectus. 
-                            Aliquam lobortis quam velit nisl, ullamcorper. Lorem tincidunt quisque amet sodales.
-                        </p>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                            Consectetur justo mollis lacus euismod praesent venenatis. 
-                            Adipiscing aenean eget eget diam feugiat. Viverra mus non semper et porttitor purus nunc tempus. 
-                            Iaculis sit eleifend cum accumsan lobortis. Imperdiet sed platea iaculis scelerisque. 
-                            Tortor interdum magna congue amet, pretium sed. Quis ultrices at leo, egestas sapien sapien eu. 
-                            Feugiat sit orci rutrum purus massa in facilisi platea ac. Egestas elit pellentesque velit nec erat. 
-                            Felis aliquet diam porttitor proin arcu in scelerisque eget senectus. 
-                            Aliquam lobortis quam velit nisl, ullamcorper. Lorem tincidunt quisque amet sodales.
-                        </p>
-
-                        <div class="my-4">
-                            <a href="#" class="btn btn-dark px-3">What did I retain ? <img src="assets/img/reflexion-icon.png" alt=""/></a>
-                        </div>
-                    </div>
+                    
+                    {
+                        showStepsStudyModule()
+                    }
                 </div>
             </div>
-        
             <Footer/>
-
-            {/* <Overlay/>   */}
         </>
     );
 }
 
-function video(){
-    var play = document.getElementById('play')
-    var range = document.getElementById('range')
-    var videoTime = document.getElementById('videoTime')
-    var videoDuration = document.getElementById('videoDuration')
-    var video = document.getElementById('video')
-
-    play.addEventListener('click', function (){
-        if(video.paused){
-            video.play();
-            document.querySelector("#play i").classList.replace("fa-play-circle", "fa-pause")
-        }else{
-            video.pause();
-            document.querySelector("#play i").classList.replace("fa-pause", "fa-play-circle")
-        }
-    })
-
-    range.addEventListener('input', function() {
-        video.currentTime = range.value;
-        range.max = Math.floor(video.duration);
-    })
-
-    video.addEventListener('timeupdate', function() {
-        videoTime.innerHTML = Math.floor(video.currentTime);
-        range.value = video.currentTime;
-        range.max = Math.floor(video.duration);
-    })
-
-    window.onload = function() {
-        videoTime.innerHTML = video.currentTime;
-        videoDuration.innerHTML = Math.floor(video.duration)+" s";
-    }
-}

@@ -1,4 +1,7 @@
-export const studiesModules = [
+
+export const studiesModules = 
+
+[
     {
         "icon" : "assets/img/categories/icons/i1.png",
         "title" : "How the body works",

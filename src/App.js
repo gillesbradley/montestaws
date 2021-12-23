@@ -27,13 +27,15 @@ function App() {
       <Router>
           <Switch>
 
-            <Route path="/forgot-password" component={ForgotPassword} />
-
-            <Route path="/studiesModulesDetail" component={StudyModuleDetail} />
-            <PrivateRoute exact path="/studiesModules" component={Home} />
+            <Route exact path="/forgot-password" component={ForgotPassword} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/registerStep" component={RegisterStep} />
             <Route exact path="/register" component={Register} />
+            
+            <PrivateRoute exact path="/studiesModules" component={Home} />
+            <Route exact path="/:idStudyModule" component={StudyModuleDetail} />
+
+            
             <Route exact path="/" component={Welcome} />
             
             

@@ -1,8 +1,19 @@
-import React from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 
-function Welcome() {
+function Welcome({history}) {
+    useEffect(() => {
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                history.push("/studiesModules");
+            }
+        })
+    }, [])
+
     return (
       <>
         <div class="logo">

@@ -4,13 +4,17 @@ import React, {useEffect, useState} from "react";
 import { Link, Redirect } from "react-router-dom";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
+import NoData from "../Components/NoData";
 import Overlay from "../Components/Overlay";
 import { StudyModule } from "../Components/StudyModule";
 import { db } from "../firestoreConfig";
 import { studiesModules } from "../Mocks/data";
+import getToAxios from "../Services/getToAxios";
 
 
 export default function Home({history}) {
+    const [studyModules, setStudyModules] = useState([]);
+    const [userAuthenticate, setUserAuthenticate] = useState({});
 
     const checkIfUserNotSave = () => {
         const auth = getAuth();
@@ -23,7 +27,8 @@ export default function Home({history}) {
                 const userRef = await getDoc(docRef);
 
                 let userInfo = userRef.data();
-                
+                setUserAuthenticate(userInfo);
+
                 if (typeof userInfo == "undefined") {
                     history.push("/registerStep");
                 }else{
@@ -34,16 +39,30 @@ export default function Home({history}) {
         })
     };
 
-    const [studyModules, setStudyModules] = useState([]);
+    const getAllStudyModules = () => {
+        getToAxios("http://localhost:59880/api/studymodule/").then(json => {
+            //console.log(json);
+            setStudyModules(json);
+        })
+        .catch(error=>{
+
+            console.log("erreur suivante : "+error);
+        })
+    }
 
     useEffect(() => {
-        setStudyModules(studiesModules);
+        getAllStudyModules();
+        
         checkIfUserNotSave();
-    }, [checkIfUserNotSave]);
 
+    }, [checkIfUserNotSave, getAllStudyModules]);
+
+
+    
     
 
     return (
+        
         <>
             <Navbar/>
             <div class="container h-100 p-5">
@@ -56,11 +75,7 @@ export default function Home({history}) {
                     </div>
                     <div class="row d-flex justify-content-center align-items-center">
                         {
-                            studyModules.map((s, index) => {
-                                return (
-                                    <StudyModule key={index} data={s} />
-                                )
-                            })
+                            studyModules.length==0 ? <h2>loading ....</h2> : studyModules.map((s, index) => (userAuthenticate.contentCategory == s.categoryStudyModule.categoryName ) ? <StudyModule key={index} data={s} /> : <NoData/>)
                         }
                     </div>
                 </div>
@@ -68,7 +83,6 @@ export default function Home({history}) {
 
             <Footer />
 
-            {/* <Overlay />   */}
         </>
     );
   }
